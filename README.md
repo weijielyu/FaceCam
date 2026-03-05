@@ -35,10 +35,6 @@ pip install mediapipe==0.10.21
 
 We support the Wan 2.2 14B model. Create the directory and download all required assets:
 
-| Model | Base checkpoint | Notes |
-|---|---|---|
-| **Wan 2.2 14B** (`wan2.2-14b`) | [Wan-AI/Wan2.2-I2V-A14B](https://huggingface.co/Wan-AI/Wan2.2-I2V-A14B) | Dual-DiT (high/low noise), highest quality |
-
 ```bash
 mkdir -p models ckpts
 ```
@@ -50,16 +46,21 @@ pip install modelscope
 modelscope download --model Wan-AI/Wan2.2-I2V-A14B --local_dir ./models/Wan-AI/Wan2.2-I2V-A14B
 ```
 
-**2. FaceCam assets** (checkpoints, proxy 3D head, face landmarker) from [Hugging Face](https://huggingface.co/wlyu/FaceCam):
+**2. FaceCam assets** (checkpoints, proxy 3D head) from [Hugging Face](https://huggingface.co/wlyu/FaceCam):
 
 ```bash
 pip install huggingface_hub
 huggingface-cli download wlyu/FaceCam --local-dir ./ckpts
+```
+
+Alternatively, download from Google Drive: [checkpoints](https://drive.google.com/file/d/1MKBsq5Nvn6EqSQAd8JwIPwxzSRyjjc-_/view?usp=sharing) and [proxy 3D head](https://drive.google.com/file/d/16nAtjP6_vPNWBFCkYdlK5EKxXFWbddhQ/view?usp=drive_link).
+
+**3. Face landmarker** (MediaPipe model):
+
+```bash
 wget -O ckpts/face_landmarker_v2_with_blendshapes.task -q \
   https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task
 ```
-
-Alternatively, download from Google Drive: [checkpoints](https://drive.google.com/file/d/1MKBsq5Nvn6EqSQAd8JwIPwxzSRyjjc-_/view?usp=sharing) and [gaussians.ply](https://drive.google.com/file/d/16nAtjP6_vPNWBFCkYdlK5EKxXFWbddhQ/view?usp=drive_link).
 
 The expected layout:
 
