@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="FaceCam generates portrait videos with precise camera control from a single input video and a target camera trajectory via scale-aware conditioning.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FaceCam: Portrait Video Camera Control via Scale-Aware Conditioning</title>
+  <link rel="icon" href="./static/images/icon.png" type="image/png">
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro|Cormorant+Garamond:400,500,600"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="./static/css/style.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  <script src="./static/js/script.js"></script>
+</head>
+<body>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-2 publication-title">
+            FaceCam: Portrait Video Camera Control via Scale-Aware Conditioning
+          </h1>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://weijielyu.github.io/">Weijie Lyu</a><sup>1, 2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://faculty.ucmerced.edu/mhyang/">Ming-Hsuan Yang</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://zhixinshu.github.io/">Zhixin Shu</a><sup>2</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>University of California, Merced </span>
+            <span class="author-block"><sup>2</sup>Adobe Research </span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="./static/pdf/FaceCam.pdf"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <!-- arXiv Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2412.17812"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+              <span class="link-block">
+                <a href="https://youtu.be/QGJcwo44ziU"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/weijielyu/FaceCam"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+            </div>
+          </div>
+          <!-- Submission Status. -->
+          <div class="title-row">
+            <span class="title is-4 publication-venue">⛰️ CVPR 2026 ⛰️</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <img src="./static/images/teaser.png" 
+               alt="FaceCam teaser" width="100%" class="teaser-img">
+        </div>
+      </div>
+    </div>
+    <h2 class="subtitle has-text-centered">
+      <i>FaceCam</i> generates portrait videos with precise camera control from a single input video 
+      and a target camera trajectory. We introduce <b style="color:hsl(204, 86%, 53%)">scale-aware camera conditioning</b> that 
+      represents the target camera via rendered facial landmarks, enabling accurate camera pose 
+      control. Our approach preserves subject identity and motion while maintaining high visual quality, 
+      without relying on any 4D synthetic data for training.
+    </h2>
+  </div>
+</section>
+
+<!-- Abstract. -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            We introduce <i>FaceCam</i>, a system that generates video under customizable camera 
+            trajectories for monocular human portrait video input. Recent camera control approaches 
+            based on large video-generation models have shown promising progress but often exhibit 
+            geometric distortions and visual artifacts on portrait videos due to scale-ambiguous 
+            camera representations or 3D reconstruction errors. To overcome these limitations, we 
+            propose a face-tailored <b style="color:hsl(204, 86%, 53%)">scale-aware representation</b> 
+            for camera transformations that provides deterministic conditioning without relying on 
+            3D priors. We train a video generation model on both multi-view studio captures and 
+            in-the-wild monocular videos, and introduce two camera-control data generation strategies: 
+            <b style="color:hsl(204, 86%, 53%)">synthetic camera motion</b> and 
+            <b style="color:hsl(204, 86%, 53%)">multi-shot stitching</b>, to exploit stationary 
+            training cameras while generalizing to dynamic, continuous camera trajectories at inference 
+            time. Experiments on Ava-256 dataset and diverse in-the-wild videos demonstrate that 
+            <i>FaceCam</i> achieves superior performance in camera controllability, visual quality, 
+            identity and motion preservation.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Video. -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Video</h2>
+        <div class="publication-video">
+          <iframe src="https://www.youtube-nocookie.com/embed/QGJcwo44ziU?rel=0"
+                  frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--/ Video. -->
+ 
+<!-- Method. -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Method</h2>
+        <h3 class="title is-4 has-text-centered">Scale-Aware Camera Conditioning</h3>
+        <div class="container is-max-desktop">
+          <div class="columns is-centered has-text-centered">
+            <div class="column">
+              <img src="static/images/scale_ambiguous.png" width="100%" >
+              <b>Scale-ambiguous camera representation.</b> Existing camera control methods encode camera using <b style="color:hsl(204, 86%, 53%)">extrinsic parameters</b>.
+              In monocular capture, metric depth is unobservable, the scene is determined only up to a global similarity with unknown scale and translation.
+              Hence, the same image admits infinitely many 3D configurations, making re-rendering from a target pose underdetermined and leading to drift
+              and poor controllability.
+            </div>
+            <div class="column">
+              <img src="static/images/scale_aware.png" width="100%" >
+              <b>Scale-aware camera representation.</b> We encode the camera via <b style="color:hsl(204, 86%, 53%)">image-space point correspondences</b>.
+              With 2D correspondences, the fundamental matrix between two uncalibrated views can be estimated, and with known intrinsics the relative
+              pose is recovered up to a global scale. Portrait videos naturally provide such correspondences through facial landmarks, so we use rasterized
+              2D landmark maps as the camera representation.
+            </div>
+          </div>
+        </div>
+        <br>
+        <h3 class="title is-4 has-text-centered">Training Data Generation</h3>
+        <div class="container is-max-desktop">
+          <div class="columns is-centered has-text-centered">
+            <div class="column">
+              <video src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/data_generation/original.mp4" width="100%" style="min-height: 150px; background: #f0f0f0;" autoplay muted loop playsinline preload="auto"></video>
+              <b class="block" style="margin-bottom: 0.5rem;">Original Video</b>
+            </div>
+            <div class="column">
+              <video src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/data_generation/scale_and_color.mp4" width="100%" style="min-height: 150px; background: #f0f0f0;" autoplay muted loop playsinline preload="auto"></video>
+              <b class="block" style="margin-bottom: 0.5rem;">Scale and Color Augmentation</b>
+            </div>
+            <div class="column">
+              <video src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/data_generation/pan_down.mp4" width="100%" style="min-height: 150px; background: #f0f0f0;" autoplay muted loop playsinline preload="auto"></video>
+              <b class="block" style="margin-bottom: 0.5rem;">Synthetic camera motion (Pan down)</b>
+            </div>
+            <div class="column">
+              <video src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/data_generation/zoom_in.mp4" width="100%" style="min-height: 150px; background: #f0f0f0;" autoplay muted loop playsinline preload="auto"></video>
+              <b class="block" style="margin-bottom: 0.5rem;">Synthetic camera motion (Zoom in)</b>
+            </div>
+            <div class="column">
+              <video src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/data_generation/stitched.mp4" width="100%" style="min-height: 150px; background: #f0f0f0;" autoplay muted loop playsinline preload="auto"></video>
+              <b class="block" style="margin-bottom: 0.5rem;">Multi-shot stitching</b>
+            </div>
+          </div>
+        </div>
+        <p style="margin-top: 1rem;">
+          We train our network on a studio-captured multi-view human video dataset with only <b>static cameras</b>. To enable <b>dynamic</b> camera trajectories at inference, we introduce
+          two data generation strategies: <b style="color:hsl(204, 86%, 53%)">synthetic camera motion</b> and <b style="color:hsl(204, 86%, 53%)">multi-shot stitching</b>. 
+          We find that the <b>discontinuous</b> camera pose changes produced by multi-shot stitching during
+          training generalize well to <b>continuous</b> camera trajectories at inference, <b>without relying on any 4D synthetic data for training</b>.
+        </p>
+        <br>
+        <h3 class="title is-4 has-text-centered">Training and Inference Pipeline</h3>
+        <div class="container is-max-desktop">
+          <div class="columns is-centered has-text-centered">
+            <div class="column is-5">
+              <img src="static/images/training.png" width="100%" >
+              <b>Training.</b> We extract facial landmarks from the anchor
+                frame of the target video as camera condition. Source video,
+                target video, and camera condition are encoded by a VAE into
+                latents, which are passed into the diffusion transformer to pre-
+                dict the target latent, optimized with a flow-matching loss.
+            </div>
+            <div class="column is-7">
+              <img src="static/images/inference.png" width="100%" >
+              <b>Inference.</b> We use a 3D head model generated as a generic head, render it along the
+              target camera trajectory, and detect facial landmarks as the camera condition. The output
+              latent from the diffusion transformer is decoded by a VAE decoder to obtain the camera-
+              controlled video. We observe that, although the model is trained only with discontinuous
+              camera pose changes, it generalizes to continuous camera trajectories during inference.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Results. -->
+<section class="section results-section">
+  <div class="container is-fullhd">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">Results</h2>
+        <h3 class="title is-4 has-text-centered">Camera Control on Portrait Videos</h3>
+        <h4 class="title is-5 has-text-centered">
+          <a href="./more_results.html">(Click to see more results — Page 1, 2, 3)</a>
+        </h4>
+        <div class="result-group">
+          <div class="has-text-centered result-label">
+            <b class="is-size-6">Source Video</b>
+          </div>
+          <div class="columns">
+            <div class="column" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+              <b class="is-size-6">Conditioning Signal</b>
+              <span style="margin-top: 0.2rem;">↓</span>
+            </div>
+            <div class="column"><video class="sync-play-1" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_5/condition_video_0005.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-1" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_5/condition_video_0053.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-1" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_5/condition_video_0061.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-1" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_5/condition_video_0109.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-1" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_5/condition_video_0125.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-1" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_5/condition_video_0141.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+          </div>
+          <div class="columns">
+            <div class="column"><video class="sync-play-1" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_5/condition_pose.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-1" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_5/generated_video_0005.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-1" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_5/generated_video_0053.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-1" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_5/generated_video_0061.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-1" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_5/generated_video_0109.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-1" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_5/generated_video_0125.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-1" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_5/generated_video_0141.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+          </div>
+          <div class="has-text-centered result-label">
+            <b class="is-size-6">Generated Video</b>
+          </div>
+        </div>
+        <div class="result-group">
+          <div class="has-text-centered result-label">
+            <b class="is-size-6">Source Video</b>
+          </div>
+          <div class="columns">
+            <div class="column" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+              <b class="is-size-6">Conditioning Signal</b>
+              <span style="margin-top: 0.2rem;">↓</span>
+            </div>
+            <div class="column"><video class="sync-play-2" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_1/condition_video_0065.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-2" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_1/condition_video_0073.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-2" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_1/condition_video_0089.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-2" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_1/condition_video_0145.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-2" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_1/condition_video_0177.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-2" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_1/condition_video_0185.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+          </div>
+          <div class="columns">
+            <div class="column"><video class="sync-play-2" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_1/condition_pose.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-2" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_1/generated_video_0065.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-2" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_1/generated_video_0073.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-2" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_1/generated_video_0089.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-2" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_1/generated_video_0145.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-2" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_1/generated_video_0177.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-2" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_1/generated_video_0185.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+          </div>
+          <div class="has-text-centered result-label">
+            <b class="is-size-6">Generated Video</b>
+          </div>
+        </div>
+        <div class="result-group">
+          <div class="has-text-centered result-label">
+            <b class="is-size-6">Source Video</b>
+          </div>
+          <div class="columns">
+            <div class="column" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+              <b class="is-size-6">Conditioning Signal</b>
+              <span style="margin-top: 0.2rem;">↓</span>
+            </div>
+            <div class="column"><video class="sync-play-3" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_7/condition_video_0015.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-3" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_7/condition_video_0063.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-3" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_7/condition_video_0087.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-3" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_7/condition_video_0143.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-3" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_7/condition_video_0223.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-3" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_7/condition_video_0247.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+          </div>
+          <div class="columns">
+            <div class="column"><video class="sync-play-3" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_7/condition_pose.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-3" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_7/generated_video_0015.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-3" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_7/generated_video_0063.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-3" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_7/generated_video_0087.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-3" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_7/generated_video_0143.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-3" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_7/generated_video_0223.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+            <div class="column"><video class="sync-play-3" src="https://huggingface.co/wlyu/FaceCam_website/resolve/main/videos/results/group_7/generated_video_0247.mp4" width="100%" muted loop playsinline preload="auto"></video></div>
+          </div>
+          <div class="has-text-centered result-label">
+            <b class="is-size-6">Generated Video</b>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@inproceedings{lyu2025facecam,
+  title={FaceCam: Portrait Video Camera Control via Scale-Aware Conditioning},
+  author={Lyu, Weijie and Yang, Ming-Hsuan and Shu, Zhixin},
+  booktitle={[Add venue when available]},
+  year={2025}
+}</code></pre>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This page is adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function() {
+  function syncGroup(className) {
+    var videos = document.querySelectorAll('video.' + className);
+    if (videos.length === 0) return;
+    Promise.all(Array.from(videos).map(function(v) {
+      return new Promise(function(resolve) {
+        if (v.readyState >= 2) resolve();
+        else v.addEventListener('canplay', resolve, { once: true });
+      });
+    })).then(function() {
+      videos.forEach(function(v) { v.currentTime = 0; v.play(); });
+    });
+  }
+  syncGroup('sync-play-1');
+  syncGroup('sync-play-2');
+  syncGroup('sync-play-3');
+})();
+</script>
+
+</body>
+</html>
