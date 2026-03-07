@@ -152,12 +152,6 @@ If you find our work useful for your research, please consider citing our paper:
 }
 ```
 
-## 📄 License
-
-Copyright 2026 Adobe Inc.
-
-Code and model weights are licensed under [Apache-2.0 License](http://www.apache.org/licenses/LICENSE-2.0).
-
 ## 🙏 Acknowledgements
 
 This work is built upon [Wan](https://arxiv.org/abs/2503.20314) and [DiffSynth](https://github.com/modelscope/DiffSynth-Studio). We thank the authors for their excellent work.
