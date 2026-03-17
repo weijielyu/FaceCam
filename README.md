@@ -101,9 +101,11 @@ python inference.py \
 For each input video `<name>.mp4`, the script saves:
 - `<name>.mp4` — the generated video
 - `<name>_input.mp4` — the cropped input video
-- `<name>_camera.mp4` — the camera condition visualisation
+- `<name>_camera.mp4` — the camera condition visualization
 
-By default, the code generates a random camera trajectory. To use a specific trajectory instead, you can customize the `random_camera_params` function in `inference.py`.
+⚠️ **Note** ⚠️
+- By default, the code generates a random camera trajectory. To use a specific trajectory instead, you can customize the `random_camera_params` function in `inference.py`.
+- We crop the input video with the `crop_video` function in `diffsynth/utils/mediapipe_utils.py`, which may not bring the best result. You can customize this function and view the cropped input video and camera condition video [saved here](https://github.com/weijielyu/FaceCam/blob/a93443ad06b8c230e4909dbadedf1dfd166e6f3f/inference.py#L244) before diffusion generation.
 
 ### Multi-GPU
 
