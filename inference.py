@@ -241,11 +241,18 @@ class WanInferenceModule(torch.nn.Module):
             data = dataset[idx]
             video_name = data.get("video_name", f"sample_{idx}")
 
+            save_video(data["video_cond"],
+                        os.path.join(output_dir, f"{video_name}_input.mp4"),
+                        fps=dataset.fps, quality=5)
+            save_video(data["camera_cond"],
+                        os.path.join(output_dir, f"{video_name}_camera.mp4"),
+                        fps=dataset.fps, quality=5)
+
             video = self.generate(
                 prompt=data["prompt"],
-                negative_prompt=data.get("negative_prompt", ""),
-                video_cond=data.get("video_cond"),
-                camera_cond=data.get("camera_cond"),
+                negative_prompt=data["negative_prompt"],
+                video_cond=data["video_cond"],
+                camera_cond=data["camera_cond"],
                 height=dataset.height,
                 width=dataset.width,
                 num_frames=dataset.num_frames,
@@ -256,14 +263,6 @@ class WanInferenceModule(torch.nn.Module):
             save_video(video, os.path.join(output_dir, f"{video_name}.mp4"),
                        fps=dataset.fps, quality=5)
 
-            if data.get("video_cond") is not None:
-                save_video(data["video_cond"],
-                           os.path.join(output_dir, f"{video_name}_input.mp4"),
-                           fps=dataset.fps, quality=5)
-            if data.get("camera_cond") is not None:
-                save_video(data["camera_cond"],
-                           os.path.join(output_dir, f"{video_name}_camera.mp4"),
-                           fps=dataset.fps, quality=5)
 
 
 # =============================================================================
