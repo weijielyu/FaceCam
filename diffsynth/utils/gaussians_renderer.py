@@ -255,22 +255,38 @@ def render_opencv_cam(pc: GaussianModel, height: int, width: int, C2W: torch.Ten
     viewpoint_camera = Camera(C2W=C2W, fxfycxcy=fxfycxcy, h=height, w=width)
     bg = torch.tensor(list(bg_color), dtype=torch.float32, device=C2W.device)
 
-    raster_settings = GaussianRasterizationSettings(
-        image_height=int(viewpoint_camera.h),
-        image_width=int(viewpoint_camera.w),
-        tanfovx=viewpoint_camera.tanfovX,
-        tanfovy=viewpoint_camera.tanfovY,
-        bg=bg,
-        scale_modifier=1.0,
-        viewmatrix=viewpoint_camera.world_view_transform,
-        projmatrix=viewpoint_camera.full_proj_transform,
-        projmatrix_raw=viewpoint_camera.projection_matrix,
-        sh_degree=pc.sh_degree,
-        campos=viewpoint_camera.camera_center,
-        prefiltered=False,
-        debug=False,
-    )
-
+    try:
+        raster_settings = GaussianRasterizationSettings(
+            image_height=int(viewpoint_camera.h),
+            image_width=int(viewpoint_camera.w),
+            tanfovx=viewpoint_camera.tanfovX,
+            tanfovy=viewpoint_camera.tanfovY,
+            bg=bg,
+            scale_modifier=1.0,
+            viewmatrix=viewpoint_camera.world_view_transform,
+            projmatrix=viewpoint_camera.full_proj_transform,
+            projmatrix_raw=viewpoint_camera.projection_matrix,
+            sh_degree=pc.sh_degree,
+            campos=viewpoint_camera.camera_center,
+            prefiltered=False,
+            debug=False,
+        )
+    except TypeError:
+        raster_settings = GaussianRasterizationSettings(
+            image_height=int(viewpoint_camera.h),
+            image_width=int(viewpoint_camera.w),
+            tanfovx=viewpoint_camera.tanfovX,
+            tanfovy=viewpoint_camera.tanfovY,
+            bg=bg,
+            scale_modifier=1.0,
+            viewmatrix=viewpoint_camera.world_view_transform,
+            projmatrix=viewpoint_camera.full_proj_transform,
+            sh_degree=pc.sh_degree,
+            campos=viewpoint_camera.camera_center,
+            prefiltered=False,
+            debug=False,
+        )
+    
     rasterizer = GaussianRasterizer(raster_settings=raster_settings)
     rendered_image, *_ = rasterizer(
         means3D=pc.get_xyz,
